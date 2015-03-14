@@ -1,26 +1,40 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
+
+struct IOError{};
 sf::RenderWindow window;
-//(sf::VideoMode(500,500,32), "pixelsort", sf::Style::Default);
+sf::Image   image;
+sf::Texture image_tx;
+sf::Sprite  image_sprite;
+std::string infile;
+std::string outfile;
 
-class pixelsort{
+bool init(std::string in, std::string out){
 	
-	sf::Image   image;
-	sf::Texture texture;
-	sf::Sprite  sprite;
-	
+	if(!image.loadFromFile(in)){
+		std::cerr << "Failed to load input image\n";
+		return false;
+	}
+	if(!image.saveToFile(out)){
+		std::cerr << "Failed to write output image\n";
+		return false;
+	}
 
-	pixelsort(std::string filename){
-		
-		if(!image.loadFromFile(filename)){
-			std::cerr << "Failed to load input image\n";
-			
-		}
-			
-	} 
+	window.create(	sf::VideoMode(image.getSize().x, image.getSize().y),
+			"pixel sorter", sf::Style::Default);
 	
-};
+	infile = in;
+	outfile = out;
+	return true;
+} 
+
+void writeImage(){
+	if(image.saveToFile(outfile))
+		return true;
+	std::cerr << "Failed to write output image\n";
+	return false;
+}
 
 
 int main(int argc, char* argv[]){
@@ -29,6 +43,9 @@ int main(int argc, char* argv[]){
 		std::cerr << "Usage : " << argv[0] << " infile.png outfile.png\n";
 		return 0;
 	}	
+
+	if(!init(argv[1], argv[2]))
+		return 0;
 
 	while (window.isOpen())
         {
