@@ -1,2 +1,2 @@
 all:
-	gcc -o pixelsorter pixelsorter.c -l:libpng16.so.16 -lz
+	g++ -o pixelsorter pixelsorter.cpp -lsfml-graphics -lsfml-window -lsfml-system
