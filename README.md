@@ -4,6 +4,7 @@ Algorithms are hardcoded.
 This program is not intended to be used by anyone at this stage, and currently only compiles on *nix systems.
 
 C++ dependencies : SFML > 2.0
+
 C   dependencies : zlib libpng > 1.6 
 
 Compiling: use `make` to compile both c and c++ versions, or use `make c` to compile the c version and `make cpp` to compile the c++ version
