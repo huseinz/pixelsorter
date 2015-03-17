@@ -1,5 +1,6 @@
 This is a intended to do some pixel sorting on PNG images. I have not fully decided whether I want to write this using C and libpng or with C++ and SFML. Currently only the C version actually does anything.
-Algorithms are hardcoded. 
+
+Algorithms are currently hardcoded. 
 
 This program is not intended to be used by anyone at this stage, and currently only compiles on *nix systems.
 
