@@ -29,7 +29,7 @@ bool init(std::string in, std::string out){
 	return true;
 } 
 
-void writeImage(){
+bool writeImage(){
 	if(image.saveToFile(outfile))
 		return true;
 	std::cerr << "Failed to write output image\n";
