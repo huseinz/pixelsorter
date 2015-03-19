@@ -1,31 +1,43 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <png.h>
-#include <unistd.h>
-#include <stdarg.h>
-//#define png_jmpbuf(png_ptr) png_ptr->jmpbuf
+#include "pixelsorter.h"
 
-int          width, height;
-int          x, y;
-int          number_of_passes;
-png_byte     color_type;
-png_byte     bit_depth;
+void rgb_to_hsl(png_byte* rgb, png_byte* hsl_ptr){
+	float r = rgb[0] / 255;
+	float g = rgb[1] / 255;
+	float b = rgb[2] / 255;
+	
+	float max = _max(r,g,b);
+	float min = _min(r,g,b);
+	float h, s, l = (max + min) / 2.0;
 
-png_structp  png_ptr;
-png_infop    info_ptr;
-png_bytep*   row_pointers;
-png_byte*    flat;
+	if(max == min)
+		h = s = 0;
+	else{
+		float d = max - min; 
+		s = l > 0.5 ? d / (2.0 - max - min) : d / (max + min);
+		
+		if(max == r)	  h = (g - b) / d + (g < b ? 6 : 0);
+		else if(max == g) h = (b - r) / d + 2;
+		else if(max == b) h = (r - g) / d + 4;
+		h /= 6;
+	}
 
+	hsl_ptr[0] = h;
+	hsl_ptr[1] = s;
+	hsl_ptr[2] = l;
+}
 
-void abort_(const char* s, ...);
-void read_png_file(char* filename);
-void write_png_image(char* filename);
-void cleanup();
-int cmpR(const void* a, const void* b);
-int cmpG(const void* a, const void* b);
-int cmpB(const void* a, const void* b);
-void pixel_sort();
-
+float _max(float r, float g, float b){
+	float max = r;
+	if(g > max) max = g;
+	if(b > max) max = b;
+	return max;
+}
+float _min(float r, float g, float b){
+	float min = r;
+	if(g < min) min = g;
+	if(b < min) min = b;
+	return min;
+}
 void pixel_sort(){
 	
 	int byte_size = 3;
@@ -66,48 +78,6 @@ void pixel_sort(){
 	qsort(flat, width * height, byte_size, cmpR);  
 //	qsort(flat, width * height, byte_size, cmpwidthG);
 //	qsort(flat, width * height, byte_size, cmpwidthB);
-}
-
-
-int main(int argc, char* argv[]){
-
-	if(argc != 3)
-		abort_("Usage : %s, <png_in> <png_out>", argv[0]);
-	
-	read_png_file(argv[1]);
-	
-
-	flat = (png_byte*)malloc(sizeof(png_byte) * height * (width * 3));
-
-	for(y = 0; y < height; y++){
-		png_byte* row = row_pointers[y];
-		png_byte* flatrow = flat + width * y * 3;
-		for(x = 0; x < width; x++){
-			png_byte* ptrA = &row[x*3];
-			png_byte* ptrB = &flatrow[x*3];
-			ptrB[0] = ptrA[0];
-			ptrB[1] = ptrA[1];
-			ptrB[2] = ptrA[2];
-		}
-	}
-	
-	pixel_sort();
-
-	for(y = 0; y < height; y++){
-		png_byte* row = row_pointers[y];
-		png_byte* flatrow = flat + width * y * 3;
-		for(x = 0; x < width; x++){
-			png_byte* ptrB = &row[x*3];
-			png_byte* ptrA = &flatrow[x*3];
-                        ptrB[0] = ptrA[0];
-                        ptrB[1] = ptrA[1];
-                        ptrB[2] = ptrA[2];
-		}
-	}
-	write_png_image(argv[2]);
-
-	cleanup();
-	return 0;
 }
 
 
