@@ -1,4 +1,14 @@
-all:
-	gcc -o pixelsorter main.c pixelsorter.c -lpng -lz
-cpp:
-	g++ -o pixelsortercpp pixelsorter.cpp -lsfml-graphics -lsfml-window -lsfml-system
+CC = gcc
+CFLAGS = -lpng -lz
+DEPS = pixelsorter.h
+OBJ = pixelsorter.o main.o
+
+
+%.o: %.c $(DEPS)
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+pixelsorter: pixelsorter.o main.o
+	gcc -o pixelsorter main.o pixelsorter.o -lpng -lz
+
+clean:
+	rm *.o

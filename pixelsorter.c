@@ -46,8 +46,8 @@ void pixel_sort(){
 		byte_size = 4;
 	
 	printf("pixel size : %d\n",byte_size);
-
-	/*for(y = 0; y < height; y++){
+/*
+	for(y = 0; y < height; y++){
 		
 
 		png_byte* row  = row_pointers[y];
@@ -73,10 +73,10 @@ void pixel_sort(){
 	}
 	qsort(row_pointers, height, sizeof(png_bytep), cmpheightR);
 	qsort(row_pointers, height, sizeof(png_bytep), cmpheightG);
-	qsort(row_pointers, height, sizeof(png_bytep), cmpheightB);*/
-
-	qsort(flat, width * height, byte_size, cmpR);  
-//	qsort(flat, width * height, byte_size, cmpwidthG);
+	qsort(row_pointers, height, sizeof(png_bytep), cmpheightB);
+*/
+//	qsort(flat, width * height, byte_size, cmpR);  
+	qsort(flat, width * height, byte_size, cmpG);
 //	qsort(flat, width * height, byte_size, cmpwidthB);
 }
 
