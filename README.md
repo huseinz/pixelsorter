@@ -1,4 +1,4 @@
-This is a intended to do some pixel sorting on PNG images. 
+This program is intended to do some pixel sorting on PNG images. 
 
 Algorithms are currently hardcoded. 
 
